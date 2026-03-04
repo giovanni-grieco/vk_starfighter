@@ -14,6 +14,8 @@ sudo dnf install libXi-devel
 
 sudo dnf install glfw-devel
 sudo dnf install glm-devel
+
+sudo dnf install glslc
 ```
 
 # Resources
