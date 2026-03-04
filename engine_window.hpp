@@ -14,6 +14,7 @@ namespace engine {
             
             
             bool shouldClose() { return glfwWindowShouldClose(window); } //inline
+            VkExtent2D getExtent() {return {static_cast<uint32_t>(width), static_cast<uint32_t>(height)}; } //inline
             void createWindowSurface(VkInstance instance, VkSurfaceKHR* surface);
             
             
