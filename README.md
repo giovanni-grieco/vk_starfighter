@@ -17,3 +17,6 @@ sudo dnf install glm-devel
 ```
 
 # Resources
+[Vulkan Tutorial](https://vulkan-tutorial.com/)
+[Vulkan Game Engine Tutorial](https://youtube.com/playlist?list=PL8327DO66nu9qYVKLDmdLW_84-yE4auCR&si=v_nPlJEXTzS4EWST)
+
