@@ -39,11 +39,9 @@ namespace engine {
         
         assert(configInfo.pipelineLayout != VK_NULL_HANDLE && "Cannot create graphics pipeline: no pipeline layout provided in configInfo");
         assert(configInfo.renderPass != VK_NULL_HANDLE && "Cannot create graphics pipeline: no render pass provided in configInfo");
+        
         auto vertShaderCode = readFile(vertFilepath);
         auto fragShaderCode = readFile(fragFilepath);
-        std::cout << "Vertex shader code size: " << vertShaderCode.size() << " bytes" << std::endl;
-        std::cout << "Fragment shader code size: " << fragShaderCode.size() << " bytes" << std::endl;
-
 
         createShaderModule(vertShaderCode, &vertShaderModule);
         createShaderModule(fragShaderCode, &fragShaderModule);
@@ -81,7 +79,6 @@ namespace engine {
         pipelineInfo.pViewportState = &configInfo.viewportInfo;
         pipelineInfo.pRasterizationState = &configInfo.rasterizationInfo;
         pipelineInfo.pMultisampleState = &configInfo.multisampleInfo;
-
         pipelineInfo.pColorBlendState = &configInfo.colorBlendInfo;
         pipelineInfo.pDepthStencilState = &configInfo.depthStencilInfo;
         pipelineInfo.pDynamicState = nullptr;
