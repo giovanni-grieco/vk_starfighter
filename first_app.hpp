@@ -37,5 +37,8 @@ namespace engine {
             std::vector<VkCommandBuffer> commandBuffers;
             std::unique_ptr<Model> model;
 
+
+            static std::vector<Model::Vertex> sierpinskyTriangleGenerator(int depth);
+
     };
 }

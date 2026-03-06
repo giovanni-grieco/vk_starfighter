@@ -19,7 +19,7 @@ namespace engine {
     }
 
     void FirstApp::loadModels(){
-        std::vector<Model::Vertex> vertices {{{0.0f,-0.5f}},{{0.5f,0.5f}},{{-0.5f, 0.5f}}};
+        std::vector<Model::Vertex> vertices = sierpinskyTriangleGenerator(5);
         model = std::make_unique<Model>(device, vertices);
     }
 
@@ -111,5 +111,40 @@ namespace engine {
         }
 
         vkDeviceWaitIdle(device.device());
+    }
+
+    std::vector<Model::Vertex> FirstApp::sierpinskyTriangleGenerator(int depth){
+        std::vector<Model::Vertex> vertices;
+        vertices.push_back({{0.0f, -0.5f}});
+        vertices.push_back({{0.5f, 0.5f}});
+        vertices.push_back({{-0.5f, 0.5f}});
+
+        for (int i=0; i < depth; i++) {
+            std::vector<Model::Vertex> newVertices;
+            for (int j=0; j < vertices.size(); j+=3) {
+                auto v1 = vertices[j];
+                auto v2 = vertices[j+1];
+                auto v3 = vertices[j+2];
+
+                auto mid12 = Model::Vertex{{(v1.position.x + v2.position.x) / 2.0f, (v1.position.y + v2.position.y) / 2.0f}};
+                auto mid23 = Model::Vertex{{(v2.position.x + v3.position.x) / 2.0f, (v2.position.y + v3.position.y) / 2.0f}};
+                auto mid31 = Model::Vertex{{(v3.position.x + v1.position.x) / 2.0f, (v3.position.y + v1.position.y) / 2.0f}};
+
+                newVertices.push_back(v1);
+                newVertices.push_back(mid12);
+                newVertices.push_back(mid31);
+
+                newVertices.push_back(v2);
+                newVertices.push_back(mid23);
+                newVertices.push_back(mid12);
+
+                newVertices.push_back(v3);
+                newVertices.push_back(mid31);
+                newVertices.push_back(mid23);
+            }
+            vertices = newVertices;
+        }
+
+        return vertices;
     }
 }
