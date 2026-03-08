@@ -38,7 +38,10 @@ namespace engine {
     }
 
     void FirstApp::createPipeline() {
-        auto pipelineConfig = Pipeline::defaultPipelineConfigInfo(swapChain->width(), swapChain->height());
+        assert(swapChain != nullptr && "Cannot create pipeline before swap chain");
+        assert(pipelineLayout != nullptr && "Cannot create pipeline before pipeline layout");
+        PipelineConfigInfo pipelineConfig{};
+        Pipeline::defaultPipelineConfigInfo(pipelineConfig); //initializes
         pipelineConfig.renderPass = swapChain->getRenderPass();
         pipelineConfig.pipelineLayout = pipelineLayout;
         pipeline = std::make_unique<Pipeline>(device, "shaders/simple_shader.vert.spv", "shaders/simple_shader.frag.spv", pipelineConfig);
@@ -53,7 +56,17 @@ namespace engine {
 
         vkDeviceWaitIdle(device.device());
         swapChain.reset(); //This wasn't present in the tutorial!
-        swapChain = std::make_unique<SwapChain>(device, extent);
+        if (swapChain == nullptr){
+            swapChain = std::make_unique<SwapChain>(device, extent);
+        } else{
+            swapChain = std::make_unique<SwapChain>(device, extent, std::move(swapChain));
+            if (swapChain->imageCount() != commandBuffers.size()) {
+                freeCommandBuffers();
+                createCommandBuffers();
+            }
+        }
+        
+        //check if render pass compatible with swap chain, if not recreate pipeline in the future.
         createPipeline();
     }
 
@@ -68,6 +81,11 @@ namespace engine {
         if (vkAllocateCommandBuffers(device.device(), &allocInfo, commandBuffers.data()) != VK_SUCCESS) {
             throw std::runtime_error("failed to allocate command buffers!");
         }
+    }
+
+    void FirstApp::freeCommandBuffers(){
+        vkFreeCommandBuffers(device.device(), device.getCommandPool(), static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
+        commandBuffers.clear();
     }
 
     void FirstApp::recordCommandBuffer(int imageIndex) {
@@ -94,6 +112,17 @@ namespace engine {
 
         vkCmdBeginRenderPass(commandBuffers[imageIndex], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
         
+        VkViewport viewport{};
+        viewport.x = 0.0f;
+        viewport.y = 0.0f;
+        viewport.width = static_cast<float>(swapChain->getSwapChainExtent().width);
+        viewport.height = static_cast<float>(swapChain->getSwapChainExtent().height);
+        viewport.minDepth = 0.0f;
+        viewport.maxDepth = 1.0f;
+        VkRect2D scissor{{0, 0}, swapChain->getSwapChainExtent()};
+        vkCmdSetViewport(commandBuffers[imageIndex], 0, 1, &viewport);
+        vkCmdSetScissor(commandBuffers[imageIndex], 0, 1, &scissor);
+
         pipeline->bind(commandBuffers[imageIndex]);
         model->bind(commandBuffers[imageIndex]);
         model->draw(commandBuffers[imageIndex]);
