@@ -15,6 +15,9 @@ namespace engine {
             
             bool shouldClose() { return glfwWindowShouldClose(window); } //inline
             VkExtent2D getExtent() {return {static_cast<uint32_t>(width), static_cast<uint32_t>(height)}; } //inline
+            bool wasWindowsResized() { return framebufferResized; } //inline
+            void resetWindowResizedFlag() { framebufferResized = false; } //inline
+            
             void createWindowSurface(VkInstance instance, VkSurfaceKHR* surface);
             
             
@@ -22,9 +25,12 @@ namespace engine {
             Window& operator=(const Window&) = delete;
 
         private:
+            static void frameBufferResizeCallback(GLFWwindow* window, int width, int height);
             void initWindow();
-            const int width;
-            const int height;
+            int width;
+            int height;
+            bool framebufferResized = false;
+
             std::string windowName;
 
             GLFWwindow* window;
