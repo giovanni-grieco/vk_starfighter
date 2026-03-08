@@ -13,6 +13,8 @@ namespace engine {
         vkFreeMemory(device.device(), vertexBufferMemory, nullptr);
     }
 
+    //we're creating a vertex buffer for each model, this is not optimal but it's the simplest way to do it.
+    //in the future we can create a single vertex buffer for all models and use offsets to specify where each model's vertices are located.
     void Model::createVertexBuffers(const std::vector<Vertex>& vertices) {
         vertexCount = static_cast<uint32_t>(vertices.size());
         assert(vertexCount >= 3 && "Vertex count must be at least 3");
