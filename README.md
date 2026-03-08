@@ -23,3 +23,5 @@ sudo dnf install glslc
 
 [Vulkan Game Engine Tutorial](https://youtube.com/playlist?list=PL8327DO66nu9qYVKLDmdLW_84-yE4auCR&si=v_nPlJEXTzS4EWST)
 
+[Essence of linear algebra](https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab)
+

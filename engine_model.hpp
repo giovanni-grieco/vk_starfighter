@@ -6,6 +6,8 @@
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE // changes the range for 0 to 1
 #include <glm/glm.hpp>
 
+#include <vector>
+
 namespace engine {
     class Model {
         public:
