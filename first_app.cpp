@@ -19,7 +19,8 @@ namespace engine {
     }
 
     void FirstApp::loadModels(){
-        std::vector<Model::Vertex> vertices = sierpinskyTriangleGenerator(5);
+        //std::vector<Model::Vertex> vertices = sierpinskyTriangleGenerator(5);
+        std::vector<Model::Vertex> vertices = exampleTriangle();
         model = std::make_unique<Model>(device, vertices);
     }
 
@@ -111,6 +112,15 @@ namespace engine {
         }
 
         vkDeviceWaitIdle(device.device());
+    }
+
+    std::vector<Model::Vertex> FirstApp::exampleTriangle(){
+        std::vector<Model::Vertex> vertices {
+            {{0.0f, -0.5f}, {1.0f, 0.0f, 0.0f}},
+            {{0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}},
+            {{-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}}
+        };
+        return vertices;
     }
 
     std::vector<Model::Vertex> FirstApp::sierpinskyTriangleGenerator(int depth){
