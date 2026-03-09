@@ -49,6 +49,8 @@ class SwapChain {
     void createFramebuffers();
     void createSyncObjects();
 
+
+
     // Helper functions
     VkSurfaceFormatKHR chooseSwapSurfaceFormat(
       const std::vector<VkSurfaceFormatKHR> &availableFormats);

@@ -5,6 +5,7 @@
 #include "engine_device.hpp"
 #include "engine_swap_chain.hpp"
 #include "engine_model.hpp"
+#include "game_object.hpp"
 
 
 #include <memory>
@@ -23,7 +24,7 @@ namespace engine {
             FirstApp& operator=(const FirstApp&) = delete;
             void run();
         private:
-            void loadModels();
+            void loadGameObjects();
             void createPipelineLayout();
             void createPipeline();
             void createCommandBuffers();
@@ -31,6 +32,7 @@ namespace engine {
             void drawFrame();
             void recreateSwapChain();
             void recordCommandBuffer(int imageIndex);
+            void renderGameObjects(VkCommandBuffer commandBuffer);
 
             Window window {WIDTH, HEIGHT, "Vulkan Engine"};
             Device device {window};
@@ -38,7 +40,7 @@ namespace engine {
             std::unique_ptr<Pipeline> pipeline;
             VkPipelineLayout pipelineLayout;
             std::vector<VkCommandBuffer> commandBuffers;
-            std::unique_ptr<Model> model;
+            std::vector<GameObject> gameObjects;
 
             static std::vector<Model::Vertex> exampleTriangle();
             static std::vector<Model::Vertex> sierpinskyTriangleGenerator(int depth);
