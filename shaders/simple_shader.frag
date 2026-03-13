@@ -1,18 +1,13 @@
 #version 450
 
-// frag shaders need an output variable
-
 layout(push_constant) uniform Push {
-    mat2 transform;
-    vec2 offset;
+    mat4 transform;
     vec3 color;
 } push;
 
-// out is for output
-layout (location = 0) out vec4 outColor;
-
-//Fragment shader is executed once for every fragment (pixel) touched by the triangle
+layout(location = 0) in vec3 fragColor; //from vertex shader
+layout(location = 0) out vec4 outColor;
 
 void main() {
-    outColor = vec4(push.color, 1.0); //alpha is 1.0 (fully opaque)
+    outColor = vec4(fragColor, 1.0); //alpha is 1.0 (fully opaque)
 }

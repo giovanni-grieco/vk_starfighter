@@ -22,20 +22,14 @@ namespace engine {
 
 
     void FirstApp::loadGameObjects(){
-        //std::vector<Model::Vertex> vertices = sierpinskyTriangleGenerator(5);
-        std::vector<Model::Vertex> vertices = exampleTriangle();
-        auto model = std::make_shared<Model>(device, vertices);
+        std::shared_ptr<Model> model = createCubeModel(device, {0.f, 0.f, 0.f});
 
-        auto triangle = GameObject::createGameObject();
-        triangle.model = model;
-        triangle.color = {.1f, .8f, .1f};
-        triangle.transform2d.translation.x = .2f;
-        triangle.transform2d.scale = {2.f, 0.5f};
-        triangle.transform2d.rotation = 0.25f * glm::two_pi<float>();
-
-        gameObjects.push_back(std::move(triangle));
+        auto cube = GameObject::createGameObject();
+        cube.model = model;
+        cube.transform.translation = {0.f, 0.f, .5f};
+        cube.transform.scale = {.5f, .5f, .5f};
+        gameObjects.push_back(std::move(cube));
     }
-
 
     void FirstApp::run() {
         SimpleRenderSystem simpleRenderSystem{device, renderer.getSwapChainRenderPass()};
@@ -55,47 +49,63 @@ namespace engine {
         vkDeviceWaitIdle(device.device());
     }
 
-    std::vector<Model::Vertex> FirstApp::exampleTriangle(){
-        std::vector<Model::Vertex> vertices {
-            {{0.0f, -0.5f}, {1.0f, 0.0f, 0.0f}},
-            {{0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}},
-            {{-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}}
+    // temporary helper function, creates a 1x1x1 cube centered at offset
+    std::unique_ptr<Model> FirstApp::createCubeModel(Device& device, glm::vec3 offset) {
+        std::vector<Model::Vertex> vertices{
+
+            // left face (white)
+            {{-.5f, -.5f, -.5f}, {.9f, .9f, .9f}},
+            {{-.5f, .5f, .5f}, {.9f, .9f, .9f}},
+            {{-.5f, -.5f, .5f}, {.9f, .9f, .9f}},
+            {{-.5f, -.5f, -.5f}, {.9f, .9f, .9f}},
+            {{-.5f, .5f, -.5f}, {.9f, .9f, .9f}},
+            {{-.5f, .5f, .5f}, {.9f, .9f, .9f}},
+
+            // right face (yellow)
+            {{.5f, -.5f, -.5f}, {.8f, .8f, .1f}},
+            {{.5f, .5f, .5f}, {.8f, .8f, .1f}},
+            {{.5f, -.5f, .5f}, {.8f, .8f, .1f}},
+            {{.5f, -.5f, -.5f}, {.8f, .8f, .1f}},
+            {{.5f, .5f, -.5f}, {.8f, .8f, .1f}},
+            {{.5f, .5f, .5f}, {.8f, .8f, .1f}},
+
+            // top face (orange, remember y axis points down)
+            {{-.5f, -.5f, -.5f}, {.9f, .6f, .1f}},
+            {{.5f, -.5f, .5f}, {.9f, .6f, .1f}},
+            {{-.5f, -.5f, .5f}, {.9f, .6f, .1f}},
+            {{-.5f, -.5f, -.5f}, {.9f, .6f, .1f}},
+            {{.5f, -.5f, -.5f}, {.9f, .6f, .1f}},
+            {{.5f, -.5f, .5f}, {.9f, .6f, .1f}},
+
+            // bottom face (red)
+            {{-.5f, .5f, -.5f}, {.8f, .1f, .1f}},
+            {{.5f, .5f, .5f}, {.8f, .1f, .1f}},
+            {{-.5f, .5f, .5f}, {.8f, .1f, .1f}},
+            {{-.5f, .5f, -.5f}, {.8f, .1f, .1f}},
+            {{.5f, .5f, -.5f}, {.8f, .1f, .1f}},
+            {{.5f, .5f, .5f}, {.8f, .1f, .1f}},
+
+            // nose face (blue)
+            {{-.5f, -.5f, 0.5f}, {.1f, .1f, .8f}},
+            {{.5f, .5f, 0.5f}, {.1f, .1f, .8f}},
+            {{-.5f, .5f, 0.5f}, {.1f, .1f, .8f}},
+            {{-.5f, -.5f, 0.5f}, {.1f, .1f, .8f}},
+            {{.5f, -.5f, 0.5f}, {.1f, .1f, .8f}},
+            {{.5f, .5f, 0.5f}, {.1f, .1f, .8f}},
+
+            // tail face (green)
+            {{-.5f, -.5f, -0.5f}, {.1f, .8f, .1f}},
+            {{.5f, .5f, -0.5f}, {.1f, .8f, .1f}},
+            {{-.5f, .5f, -0.5f}, {.1f, .8f, .1f}},
+            {{-.5f, -.5f, -0.5f}, {.1f, .8f, .1f}},
+            {{.5f, -.5f, -0.5f}, {.1f, .8f, .1f}},
+            {{.5f, .5f, -0.5f}, {.1f, .8f, .1f}},
+
         };
-        return vertices;
-    }
-
-    std::vector<Model::Vertex> FirstApp::sierpinskyTriangleGenerator(int depth){
-        std::vector<Model::Vertex> vertices;
-        vertices.push_back({{0.0f, -0.5f}});
-        vertices.push_back({{0.5f, 0.5f}});
-        vertices.push_back({{-0.5f, 0.5f}});
-
-        for (int i=0; i < depth; i++) {
-            std::vector<Model::Vertex> newVertices;
-            for (int j=0; j < vertices.size(); j+=3) {
-                auto v1 = vertices[j];
-                auto v2 = vertices[j+1];
-                auto v3 = vertices[j+2];
-
-                auto mid12 = Model::Vertex{{(v1.position.x + v2.position.x) / 2.0f, (v1.position.y + v2.position.y) / 2.0f}};
-                auto mid23 = Model::Vertex{{(v2.position.x + v3.position.x) / 2.0f, (v2.position.y + v3.position.y) / 2.0f}};
-                auto mid31 = Model::Vertex{{(v3.position.x + v1.position.x) / 2.0f, (v3.position.y + v1.position.y) / 2.0f}};
-
-                newVertices.push_back(v1);
-                newVertices.push_back(mid12);
-                newVertices.push_back(mid31);
-
-                newVertices.push_back(v2);
-                newVertices.push_back(mid23);
-                newVertices.push_back(mid12);
-
-                newVertices.push_back(v3);
-                newVertices.push_back(mid31);
-                newVertices.push_back(mid23);
-            }
-            vertices = newVertices;
+        for (auto& v : vertices) {
+            v.position += offset;
         }
-
-        return vertices;
+        return std::make_unique<Model>(device, vertices);
     }
+
 }

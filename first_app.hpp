@@ -30,8 +30,7 @@ namespace engine {
 
             std::vector<GameObject> gameObjects;
 
-            static std::vector<Model::Vertex> exampleTriangle();
-            static std::vector<Model::Vertex> sierpinskyTriangleGenerator(int depth);
+            static std::unique_ptr<Model> createCubeModel(Device& device, glm::vec3 offset);
 
     };
 }
