@@ -1,12 +1,9 @@
 #pragma once
 
 #include "engine_window.hpp"
-#include "engine_pipeline.hpp"
-#include "engine_device.hpp"
-#include "engine_swap_chain.hpp"
 #include "engine_model.hpp"
 #include "game_object.hpp"
-
+#include "engine_renderer.hpp"
 
 #include <memory>
 #include <vector>
@@ -25,21 +22,12 @@ namespace engine {
             void run();
         private:
             void loadGameObjects();
-            void createPipelineLayout();
-            void createPipeline();
-            void createCommandBuffers();
-            void freeCommandBuffers();
-            void drawFrame();
-            void recreateSwapChain();
-            void recordCommandBuffer(int imageIndex);
-            void renderGameObjects(VkCommandBuffer commandBuffer);
 
             Window window {WIDTH, HEIGHT, "Vulkan Engine"};
             Device device {window};
-            std::unique_ptr<SwapChain> swapChain;
-            std::unique_ptr<Pipeline> pipeline;
-            VkPipelineLayout pipelineLayout;
-            std::vector<VkCommandBuffer> commandBuffers;
+            Renderer renderer {window, device};
+
+
             std::vector<GameObject> gameObjects;
 
             static std::vector<Model::Vertex> exampleTriangle();
