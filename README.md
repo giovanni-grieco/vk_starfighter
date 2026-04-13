@@ -25,3 +25,7 @@ sudo dnf install glslc
 
 [Essence of linear algebra](https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab)
 
+[Game Loop Article 1](https://gameprogrammingpatterns.com/game-loop.html)
+
+[Game Loop Article 2](https://gafferongames.com/post/fix_your_timestep/)
+
