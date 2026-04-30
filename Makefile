@@ -1,4 +1,10 @@
-CFLAGS = -std=c++17 -O2
+include .env
+
+
+LIBRARIES=$(TINY_OBJ_LOADER)
+
+CFLAGS_PROD = -std=c++17 -O2 -I$(LIBRARIES)
+CFLAGS_DEBUG = -std=c++17 -g -I$(LIBRARIES)
 LDFLAGS = -lglfw -lvulkan -ldl -lpthread -lX11 -lXxf86vm -lXrandr -lXi
 
 
@@ -13,10 +19,17 @@ FRAG_OBJS = $(FRAG_SOURCES:.frag=.frag.spv)
 %.frag.spv: %.frag
 	glslc $< -o $@
 
-all: Engine $(VERT_OBJS) $(FRAG_OBJS)
+all_prod: Engine_prod $(VERT_OBJS) $(FRAG_OBJS)
 
-Engine: *.cpp *.hpp
-	g++ $(CFLAGS) -o Engine *.cpp $(LDFLAGS)
+all_debug: Engine_debug $(VERT_OBJS) $(FRAG_OBJS)
+
+
+Engine_debug: *.cpp *.hpp
+	g++ $(CFLAGS_DEBUG) -o Engine *.cpp $(LDFLAGS)
+
+Engine_prod: *.cpp *.hpp
+	g++ $(CFLAGS_PROD) -o Engine *.cpp $(LDFLAGS)
+
 
 
 .PHONY: test clean all
