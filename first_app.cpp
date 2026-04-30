@@ -24,13 +24,24 @@ namespace engine {
 
 
     void FirstApp::loadGameObjects(){
-        std::shared_ptr<Model> model = Model::createModelFromFile(device, "models/smooth_vase.obj");
+        std::shared_ptr<Model> flatVaseModel = Model::createModelFromFile(device, "models/flat_vase.obj");
 
-        auto gameObject = GameObject::createGameObject();
-        gameObject.model = model;
-        gameObject.transform.translation = {0.f, 0.f, 0.f};
-        gameObject.transform.scale = {.5f, .5f, .5f};
-        gameObjects.push_back(std::move(gameObject));
+        auto flatVase = GameObject::createGameObject();
+        flatVase.model = flatVaseModel;
+        flatVase.transform.translation = {-0.5f, 0.f, 2.f};
+        flatVase.transform.scale = {3.f, 1.5f, 3.f};
+        gameObjects.push_back(std::move(flatVase));
+
+
+        std::shared_ptr<Model> smoothVaseModel = Model::createModelFromFile(device, "models/smooth_vase.obj");
+
+        auto smoothVase = GameObject::createGameObject();
+        smoothVase.model = smoothVaseModel;
+        smoothVase.transform.translation = {0.5f, 0.f, 2.f};
+        smoothVase.transform.scale = {3.f, 1.5f, 3.f};
+        gameObjects.push_back(std::move(smoothVase));
+
+
     }
 
     void FirstApp::run() {
