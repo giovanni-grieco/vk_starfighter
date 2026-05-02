@@ -63,7 +63,7 @@ Buffer::~Buffer() {
  */
 VkResult Buffer::map(VkDeviceSize size, VkDeviceSize offset) {
   assert(buffer && memory && "Called map on buffer before create");
-  return vkMapMemory(device.device(), memory, offset, size, 0, &mapped);
+  return vkMapMemory(device.device(), memory, offset, size, 0, &mapped); 
 }
 
 /**
@@ -93,7 +93,7 @@ void Buffer::writeToBuffer(void *data, VkDeviceSize size, VkDeviceSize offset) {
   if (size == VK_WHOLE_SIZE) {
     memcpy(mapped, data, bufferSize);
   } else {
-    char *memOffset = (char *)mapped;
+    char *memOffset = (char *)mapped; // pointer to the byte where we want to start writing to.
     memOffset += offset;
     memcpy(memOffset, data, size);
   }

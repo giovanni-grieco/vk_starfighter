@@ -47,18 +47,21 @@ namespace engine {
         gameObjects.push_back(std::move(smoothVase));
     }
 
-    void FirstApp::run() {
+    void FirstApp::run() {  
 
-        Buffer globalUboBuffer{
-            device,
-            sizeof(GlobalUbo),
-            SwapChain::MAX_FRAMES_IN_FLIGHT, //we allocate for the amount of Frames in flight we have. This way we avoid synchronization that would result in overwriting while a frame is still in flight.
-            VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-            VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
-            device.properties.limits.minUniformBufferOffsetAlignment,
-        };
+        std::vector<std::unique_ptr<Buffer>> uboBuffers(SwapChain::MAX_FRAMES_IN_FLIGHT);
+        for (int i = 0; i < uboBuffers.size(); i++){
+            uboBuffers[i] = std::make_unique<Buffer>(
+                device,
+                sizeof(GlobalUbo),
+                1,
+                VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+                VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT
+            );
+            uboBuffers[i]->map(); 
+        }
 
-        globalUboBuffer.map();
+
 
 
         SimpleRenderSystem simpleRenderSystem{device, renderer.getSwapChainRenderPass()};
@@ -96,8 +99,8 @@ namespace engine {
                 //update
                 GlobalUbo ubo{};
                 ubo.projectionView = camera.getProjection();
-                globalUboBuffer.writeToIndex(&ubo, frameIndex);
-                globalUboBuffer.flushIndex(frameIndex);
+                uboBuffers[frameIndex]->writeToBuffer(&ubo);
+                uboBuffers[frameIndex]->flush();
 
 
                 //render
