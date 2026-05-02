@@ -26,11 +26,6 @@ namespace engine {
             Window window {WIDTH, HEIGHT, "Vulkan Engine"};
             Device device {window};
             Renderer renderer {window, device};
-
-
             std::vector<GameObject> gameObjects;
-
-            static std::unique_ptr<Model> createCubeModel(Device& device, glm::vec3 offset);
-
     };
 }

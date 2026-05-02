@@ -38,7 +38,7 @@ namespace engine {
             id_t getId() { return id;}
 
             std::shared_ptr<Model> model{};
-            glm::vec3 color{};
+            glm::vec3 color{}; // are we even using this?
             TransformComponent transform;
 
         private:

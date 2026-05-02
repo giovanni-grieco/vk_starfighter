@@ -19,7 +19,7 @@ FRAG_OBJS = $(FRAG_SOURCES:.frag=.frag.spv)
 %.frag.spv: %.frag
 	glslc $< -o $@
 
-all_prod: Engine_prod $(VERT_OBJS) $(FRAG_OBJS)
+all_release: Engine_release $(VERT_OBJS) $(FRAG_OBJS)
 
 all_debug: Engine_debug $(VERT_OBJS) $(FRAG_OBJS)
 
@@ -27,7 +27,7 @@ all_debug: Engine_debug $(VERT_OBJS) $(FRAG_OBJS)
 Engine_debug: *.cpp *.hpp
 	g++ $(CFLAGS_DEBUG) -o Engine *.cpp $(LDFLAGS)
 
-Engine_prod: *.cpp *.hpp
+Engine_release: *.cpp *.hpp
 	g++ $(CFLAGS_PROD) -o Engine *.cpp $(LDFLAGS)
 
 

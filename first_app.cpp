@@ -40,8 +40,6 @@ namespace engine {
         smoothVase.transform.translation = {0.5f, 0.f, 2.f};
         smoothVase.transform.scale = {3.f, 1.5f, 3.f};
         gameObjects.push_back(std::move(smoothVase));
-
-
     }
 
     void FirstApp::run() {
