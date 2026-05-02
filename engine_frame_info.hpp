@@ -4,11 +4,14 @@
 
 #include <vulkan/vulkan.h>
 
-namespace engine{
-    struct FrameInfo{
+namespace engine
+{
+    struct FrameInfo
+    {
         int frameIndex;
         float frameTime;
         VkCommandBuffer commandBuffer;
         Camera &camera;
+        VkDescriptorSet globalDescriptorSet;
     };
 }

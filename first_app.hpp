@@ -4,6 +4,7 @@
 #include "engine_model.hpp"
 #include "game_object.hpp"
 #include "engine_renderer.hpp"
+#include "engine_descriptors.hpp"
 
 #include <memory>
 #include <vector>
@@ -26,6 +27,8 @@ namespace engine {
             Window window {WIDTH, HEIGHT, "Vulkan Engine"};
             Device device {window};
             Renderer renderer {window, device};
+
+            std::unique_ptr<DescriptorPool> globalPool{};
             std::vector<GameObject> gameObjects;
     };
 }
