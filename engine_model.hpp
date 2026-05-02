@@ -1,6 +1,7 @@
 #pragma once
 
 #include "engine_device.hpp"
+#include "engine_buffer.hpp"
 
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE // changes the range for 0 to 1
@@ -51,14 +52,12 @@ namespace engine {
             Device &device;
 
 
-            VkBuffer vertexBuffer;
-            VkDeviceMemory vertexBufferMemory;
+            std::unique_ptr<Buffer> vertexBuffer;
             uint32_t vertexCount;
 
 
             bool hasIndexBuffer = false;
-            VkBuffer indexBuffer;
-            VkDeviceMemory indexBufferMemory;
+            std::unique_ptr<Buffer> indexBuffer;
             uint32_t indexCount;
     };
 }

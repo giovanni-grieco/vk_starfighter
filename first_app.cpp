@@ -15,6 +15,11 @@
 #include <chrono>
 
 namespace engine {
+    
+    struct GlobalUbo {
+        glm::mat4 projectionView{1.f};
+        glm::vec3 lightDirection = glm::normalize(glm::vec3{1.f, -3.f, -1.f});
+    };
 
     FirstApp::FirstApp() {
         loadGameObjects();
@@ -43,6 +48,19 @@ namespace engine {
     }
 
     void FirstApp::run() {
+
+        Buffer globalUboBuffer{
+            device,
+            sizeof(GlobalUbo),
+            SwapChain::MAX_FRAMES_IN_FLIGHT, //we allocate for the amount of Frames in flight we have. This way we avoid synchronization that would result in overwriting while a frame is still in flight.
+            VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+            VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
+            device.properties.limits.minUniformBufferOffsetAlignment,
+        };
+
+        globalUboBuffer.map();
+
+
         SimpleRenderSystem simpleRenderSystem{device, renderer.getSwapChainRenderPass()};
         Camera camera{};
 
@@ -66,11 +84,25 @@ namespace engine {
             //camera.setOrthographicProjection(-aspect, aspect, -1, 1, -1, 1);
             camera.setPerspectiveProjection(glm::radians(50.f), aspect, 0.1f, 100.f);
             if (auto commandBuffer = renderer.beginFrame()) {
-
+                int frameIndex = renderer.getFrameIndex();
                 // we can add other stuff in the render pass.
+                FrameInfo frameInfo{
+                    frameIndex,
+                    frameTime,
+                    commandBuffer,
+                    camera
+                };
 
+                //update
+                GlobalUbo ubo{};
+                ubo.projectionView = camera.getProjection();
+                globalUboBuffer.writeToIndex(&ubo, frameIndex);
+                globalUboBuffer.flushIndex(frameIndex);
+
+
+                //render
                 renderer.beginSwapChainRenderPass(commandBuffer);
-                simpleRenderSystem.renderGameObjects(commandBuffer, gameObjects, camera);
+                simpleRenderSystem.renderGameObjects(frameInfo, gameObjects);
                 renderer.endSwapChainRenderPass(commandBuffer);
                 renderer.endFrame();
             }

@@ -57,7 +57,11 @@ namespace engine {
 
    
 
-    void SimpleRenderSystem::renderGameObjects(VkCommandBuffer commandBuffer, std::vector<GameObject> &gameObjects, const Camera& camera){
+    void SimpleRenderSystem::renderGameObjects(FrameInfo &frameInfo, std::vector<GameObject> &gameObjects){
+
+        auto commandBuffer = frameInfo.commandBuffer;
+        auto camera = frameInfo.camera;
+
         pipeline->bind(commandBuffer);
 
         auto projectionView = camera.getProjection() * camera.getView();
