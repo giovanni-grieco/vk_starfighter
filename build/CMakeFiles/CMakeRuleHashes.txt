@@ -1,0 +1,4 @@
+# Hashes of file build rules.
+7d3fd09019ae8ba92abda82bb1bc454b /home/giovanni/Projects/vk_starfighter/shaders/simple_shader.frag.spv
+38deb12c192a02e305377d5513c47941 /home/giovanni/Projects/vk_starfighter/shaders/simple_shader.vert.spv
+c31b1e8961bb93bf174ab874a073a198 CMakeFiles/Shaders

@@ -6,6 +6,9 @@
 #include <iostream>
 #include <cassert>
 
+#ifndef ENGINE_DIR
+#define ENGINE_DIR "../"
+#endif
 
 namespace engine {
 
@@ -26,8 +29,8 @@ namespace engine {
     
     std::vector<char> Pipeline::readFile(const std::string& filepath) {
         //open the file at the end to get the size of the file
-
-        std::ifstream file(filepath, std::ios::ate | std::ios::binary);
+        std::string enginePath = ENGINE_DIR + filepath;
+        std::ifstream file(enginePath, std::ios::ate | std::ios::binary);
         if (!file.is_open()){
             throw std::runtime_error("failed to open file: " + filepath);
         }

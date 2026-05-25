@@ -3,7 +3,7 @@
 #include "engine_utils.hpp"
 
 #define TINYOBJLOADER_IMPLEMENTATION
-#include <tiny_obj_loader.h>
+#include <tinyobjectloader/tiny_obj_loader.h>
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/hash.hpp>
@@ -12,6 +12,10 @@
 #include <cstring>
 #include <iostream>
 #include <unordered_map>
+
+#ifndef ENGINE_DIR
+#define ENGINE_DIR "../"
+#endif
 
 namespace std {
     template<>
@@ -40,7 +44,7 @@ namespace engine {
 
     std::unique_ptr<Model> Model::createModelFromFile(Device &device, const std::string &filepath){
         Builder builder{};
-        builder.loadModel(filepath);
+        builder.loadModel(ENGINE_DIR+filepath);
         std::cout << "Vertex count: "<< builder.vertices.size() << "\n";
         return std::make_unique<Model>(device, builder);
     }
