@@ -58,7 +58,7 @@ namespace engine {
 
    
 
-    void SimpleRenderSystem::renderGameObjects(FrameInfo &frameInfo, std::vector<GameObject> &gameObjects){
+    void SimpleRenderSystem::renderGameObjects(FrameInfo &frameInfo){
 
         auto commandBuffer = frameInfo.commandBuffer;
         auto camera = frameInfo.camera;
@@ -76,8 +76,9 @@ namespace engine {
             nullptr
         );
 
-        for (auto& obj: gameObjects){
-            
+        for (auto& id_obj_pair: frameInfo.gameObjects){
+            auto &obj = id_obj_pair.second;
+            if (obj.model == nullptr) continue; // not all gameObjects have models
             SimplePushConstantData push{};
             push.modelMatrix = obj.transform.mat4(); //this is executed on the CPU, temporary for now
             push.normalMatrix = obj.transform.normalMatrix(); // it's a mat3 being converted to mat4

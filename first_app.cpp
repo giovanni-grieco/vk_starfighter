@@ -42,7 +42,7 @@ namespace engine {
         flatVase.model = flatVaseModel;
         flatVase.transform.translation = {-0.5f, 0.f, 0.f};
         flatVase.transform.scale = {3.f, 1.5f, 3.f};
-        gameObjects.push_back(std::move(flatVase));
+        gameObjects.emplace(flatVase.getId(), std::move(flatVase));
 
 
         std::shared_ptr<Model> smoothVaseModel = Model::createModelFromFile(device, "models/smooth_vase.obj");
@@ -51,7 +51,7 @@ namespace engine {
         smoothVase.model = smoothVaseModel;
         smoothVase.transform.translation = {0.5f, 0.f, 0.f};
         smoothVase.transform.scale = {3.f, 1.5f, 3.f};
-        gameObjects.push_back(std::move(smoothVase));
+        gameObjects.emplace(smoothVase.getId(), std::move(smoothVase));
 
         std::shared_ptr <Model> floorModel = Model::createModelFromFile(device, "models/quad.obj");
 
@@ -59,7 +59,7 @@ namespace engine {
         floor.model = floorModel;
         floor.transform.translation = {0.f, .5f, 0.f};
         floor.transform.scale={3.f, 1.f, 3.f};
-        gameObjects.push_back(std::move(floor));
+        gameObjects.emplace(floor.getId(), std::move(floor));
     }
 
     void FirstApp::run() {  
@@ -77,7 +77,7 @@ namespace engine {
         }
 
         auto globalSetLayout = DescriptorSetLayout::Builder(device)
-            .addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT)
+            .addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_ALL_GRAPHICS)
             .build();
 
         std::vector<VkDescriptorSet> globalDescriptorSets(SwapChain::MAX_FRAMES_IN_FLIGHT);
@@ -120,7 +120,8 @@ namespace engine {
                     frameTime,
                     commandBuffer,
                     camera,
-                    globalDescriptorSets[frameIndex]
+                    globalDescriptorSets[frameIndex],
+                    gameObjects
                 };
 
                 //update
@@ -132,7 +133,7 @@ namespace engine {
 
                 //render
                 renderer.beginSwapChainRenderPass(commandBuffer);
-                simpleRenderSystem.renderGameObjects(frameInfo, gameObjects);
+                simpleRenderSystem.renderGameObjects(frameInfo);
                 renderer.endSwapChainRenderPass(commandBuffer);
                 renderer.endFrame();
             }
