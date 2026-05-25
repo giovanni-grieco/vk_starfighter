@@ -17,8 +17,11 @@
 namespace engine {
     
     struct GlobalUbo {
-        alignas(16) glm::mat4 projectionView{1.f};
-        alignas(16) glm::vec3 lightDirection = glm::normalize(glm::vec3{1.f, -3.f, -1.f});
+        glm::mat4 projectionView{1.f};
+        glm::vec4 ambientLightColore{1.f, 1.f, 1.f, .02f};
+        //alignas(16) glm::vec3 lightDirection = glm::normalize(glm::vec3{1.f, -3.f, -1.f});
+        glm::vec3 lightPosition{-1.f}; //12 byte, ne servono altri 4 byte per allinearlo.
+        alignas(16) glm::vec4 lightColor{1.f}; //usiamo alignas per posizionare lightColor al 16-esimo byte dopo lightPosition che termina al 12-esimo byte.
     };
 
     FirstApp::FirstApp() {
@@ -37,7 +40,7 @@ namespace engine {
 
         auto flatVase = GameObject::createGameObject();
         flatVase.model = flatVaseModel;
-        flatVase.transform.translation = {-0.5f, 0.f, 2.f};
+        flatVase.transform.translation = {-0.5f, 0.f, 0.f};
         flatVase.transform.scale = {3.f, 1.5f, 3.f};
         gameObjects.push_back(std::move(flatVase));
 
@@ -46,9 +49,17 @@ namespace engine {
 
         auto smoothVase = GameObject::createGameObject();
         smoothVase.model = smoothVaseModel;
-        smoothVase.transform.translation = {0.5f, 0.f, 2.f};
+        smoothVase.transform.translation = {0.5f, 0.f, 0.f};
         smoothVase.transform.scale = {3.f, 1.5f, 3.f};
         gameObjects.push_back(std::move(smoothVase));
+
+        std::shared_ptr <Model> floorModel = Model::createModelFromFile(device, "models/quad.obj");
+
+        auto floor = GameObject::createGameObject();
+        floor.model = floorModel;
+        floor.transform.translation = {0.f, .5f, 0.f};
+        floor.transform.scale={3.f, 1.f, 3.f};
+        gameObjects.push_back(std::move(floor));
     }
 
     void FirstApp::run() {  
@@ -82,6 +93,7 @@ namespace engine {
         Camera camera{};
 
         auto viewerObject = GameObject::createGameObject();
+        viewerObject.transform.translation.z = -2.5f;
         KeyboardMovementController cameraController{};
 
         auto currentTime = std::chrono::high_resolution_clock::now();
