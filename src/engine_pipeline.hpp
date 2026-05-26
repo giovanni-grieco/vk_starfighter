@@ -9,6 +9,7 @@
 namespace engine{
 
     struct PipelineConfigInfo {
+
         PipelineConfigInfo(const PipelineConfigInfo&) = delete;
         PipelineConfigInfo& operator=(const PipelineConfigInfo&) = delete;
 

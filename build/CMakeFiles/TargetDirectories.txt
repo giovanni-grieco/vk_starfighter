@@ -1,4 +1,0 @@
-/home/giovanni/Projects/vk_starfighter/build/CMakeFiles/Engine.dir
-/home/giovanni/Projects/vk_starfighter/build/CMakeFiles/Shaders.dir
-/home/giovanni/Projects/vk_starfighter/build/CMakeFiles/edit_cache.dir
-/home/giovanni/Projects/vk_starfighter/build/CMakeFiles/rebuild_cache.dir
