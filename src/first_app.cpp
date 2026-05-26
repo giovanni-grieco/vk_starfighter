@@ -1,6 +1,7 @@
 #include "first_app.hpp"
 
-#include "simple_render_system.hpp"
+#include "systems/simple_render_system.hpp"
+#include "systems/point_light_system.hpp"
 #include "keyboard_movement_controller.hpp"
 
 #define GLM_FORCE_RADIANS
@@ -17,7 +18,8 @@
 namespace engine {
     
     struct GlobalUbo {
-        glm::mat4 projectionView{1.f};
+        glm::mat4 projection{1.f};
+        glm::mat4 view{1.f};
         glm::vec4 ambientLightColore{1.f, 1.f, 1.f, .02f};
         //alignas(16) glm::vec3 lightDirection = glm::normalize(glm::vec3{1.f, -3.f, -1.f});
         glm::vec3 lightPosition{-1.f}; //12 byte, ne servono altri 4 byte per allinearlo.
@@ -90,6 +92,8 @@ namespace engine {
 
 
         SimpleRenderSystem simpleRenderSystem{device, renderer.getSwapChainRenderPass(), globalSetLayout->getDescriptorSetLayout()};
+        PointLightSystem pointLightSystem{device, renderer.getSwapChainRenderPass(), globalSetLayout->getDescriptorSetLayout()};
+        
         Camera camera{};
 
         auto viewerObject = GameObject::createGameObject();
@@ -126,7 +130,8 @@ namespace engine {
 
                 //update
                 GlobalUbo ubo{};
-                ubo.projectionView = camera.getProjection() * camera.getView();
+                ubo.projection = camera.getProjection();
+                ubo.view = camera.getView();
                 uboBuffers[frameIndex]->writeToBuffer(&ubo);
                 uboBuffers[frameIndex]->flush();
 
@@ -134,6 +139,7 @@ namespace engine {
                 //render
                 renderer.beginSwapChainRenderPass(commandBuffer);
                 simpleRenderSystem.renderGameObjects(frameInfo);
+                pointLightSystem.render(frameInfo);
                 renderer.endSwapChainRenderPass(commandBuffer);
                 renderer.endFrame();
             }
