@@ -12,6 +12,7 @@
 #include <vector>
 
 namespace engine {
+
     class PointLightSystem {
         public:
             
@@ -20,8 +21,8 @@ namespace engine {
 
             PointLightSystem(const PointLightSystem&) = delete;
             PointLightSystem& operator=(const PointLightSystem&) = delete;
-
-            void render(FrameInfo &frameInfo);
+            void update(FrameInfo& frameInfo, GlobalUbo& ubo);
+            void render(FrameInfo& frameInfo);
 
         private:
             void createPipelineLayout(VkDescriptorSetLayout globalSetLayout);
