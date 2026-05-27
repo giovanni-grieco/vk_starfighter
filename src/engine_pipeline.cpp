@@ -6,6 +6,9 @@
 #include <iostream>
 #include <cassert>
 
+#ifndef ENGINE_DIR
+#define ENGINE_DIR "../"
+#endif
 
 namespace engine {
 
@@ -26,8 +29,8 @@ namespace engine {
     
     std::vector<char> Pipeline::readFile(const std::string& filepath) {
         //open the file at the end to get the size of the file
-
-        std::ifstream file(filepath, std::ios::ate | std::ios::binary);
+        std::string enginePath = ENGINE_DIR + filepath;
+        std::ifstream file(enginePath, std::ios::ate | std::ios::binary);
         if (!file.is_open()){
             throw std::runtime_error("failed to open file: " + filepath);
         }
@@ -68,8 +71,8 @@ namespace engine {
         shaderStages[1].pNext = nullptr;
         shaderStages[1].pSpecializationInfo = nullptr;
         
-        auto bindingDescriptions = Model::Vertex::getBindingDescriptions();
-        auto attributeDescriptions = Model::Vertex::getAttributeDescriptions();
+        auto &bindingDescriptions = configInfo.bindingDescriptions;
+        auto &attributeDescriptions = configInfo.attributeDescriptions;
 
         VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
         vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
@@ -183,5 +186,8 @@ namespace engine {
         configInfo.dynamicStateInfo.pDynamicStates = configInfo.dynamicStateEnables.data();
         configInfo.dynamicStateInfo.dynamicStateCount = static_cast<uint32_t>(configInfo.dynamicStateEnables.size());
         configInfo.dynamicStateInfo.flags = 0;
+
+        configInfo.bindingDescriptions = Model::Vertex::getBindingDescriptions();
+        configInfo.attributeDescriptions = Model::Vertex::getAttributeDescriptions();
     }
 };

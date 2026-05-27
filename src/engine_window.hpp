@@ -19,7 +19,7 @@ namespace engine {
             void resetWindowResizedFlag() { framebufferResized = false; } //inline
             
             void createWindowSurface(VkInstance instance, VkSurfaceKHR* surface);
-            
+            GLFWwindow* getGLFWwindow() const {return window;};
             
             Window(const Window&) = delete;
             Window& operator=(const Window&) = delete;
