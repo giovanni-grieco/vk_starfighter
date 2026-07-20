@@ -1,15 +1,16 @@
 #pragma once
 
 #include "engine_model.hpp"
+#include "components/transform_component.hpp"
+#include "components/pointlight_component.hpp"
 
 #include <glm/gtc/matrix_transform.hpp>
-
 #include <memory>
 #include <unordered_map>
 
 namespace engine {
 
-    struct TransformComponent{
+    /*struct TransformComponent{
         glm::vec3 translation{};
         glm::vec3 scale{1.f,1.f,1.f};
         glm::vec3 rotation{};
@@ -20,11 +21,11 @@ namespace engine {
         glm::mat4 mat4();
 
         glm::mat3 normalMatrix();
-    };
+    };*/
 
-    struct PointLightComponent{
+    /*struct PointLightComponent{
         float lightIntensity = 1.0f;
-    };
+    };*/
 
     class GameObject {
         public:
