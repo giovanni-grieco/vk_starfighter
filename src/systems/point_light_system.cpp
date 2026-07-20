@@ -9,6 +9,7 @@
 #include <stdexcept>
 #include <array>
 #include <cassert>
+#include <map>
 
 namespace engine {
 
@@ -52,6 +53,7 @@ namespace engine {
         assert(pipelineLayout != nullptr && "Cannot create pipeline before pipeline layout");
         PipelineConfigInfo pipelineConfig{};
         Pipeline::defaultPipelineConfigInfo(pipelineConfig); //initializes
+        Pipeline::enableAlphaBlending(pipelineConfig);
         pipelineConfig.bindingDescriptions.clear();
         pipelineConfig.attributeDescriptions.clear();
         pipelineConfig.renderPass = renderPass;
@@ -87,6 +89,16 @@ namespace engine {
 
     void PointLightSystem::render(FrameInfo &frameInfo){
 
+        std::map<float, GameObject::id_t> sorted;
+        for (auto& kv : frameInfo.gameObjects){
+            auto& obj = kv.second;
+            if (obj.pointLight == nullptr) continue;
+
+            auto offset = obj.transform.translation - frameInfo.camera.getPosition();
+            float disSquared = glm::dot(offset, offset);
+            sorted[disSquared] = obj.getId();
+        }
+
         auto commandBuffer = frameInfo.commandBuffer;
         auto camera = frameInfo.camera;
 
@@ -103,10 +115,9 @@ namespace engine {
             nullptr
         );
         
-        for (auto& kv : frameInfo.gameObjects){
-            auto& obj = kv.second;
+        for (auto it = sorted.rbegin(); it != sorted.rend(); ++it){
+            auto& obj = frameInfo.gameObjects.at(it->second);
             
-            if (obj.pointLight == nullptr) continue;
             
             PointLightPushConstant push{};
 

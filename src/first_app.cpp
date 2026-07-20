@@ -155,6 +155,7 @@ namespace engine {
 
                 //render
                 renderer.beginSwapChainRenderPass(commandBuffer);
+                
                 simpleRenderSystem.renderGameObjects(frameInfo);
                 pointLightSystem.render(frameInfo);
                 renderer.endSwapChainRenderPass(commandBuffer);

@@ -48,7 +48,7 @@ namespace engine {
 
             id_t getId() { return id;}
 
-            glm::vec3 color{}; // are we even using this?
+            glm::vec3 color{}; // are we even using this? Yes for pointlight color
             TransformComponent transform;
 
             std::unique_ptr<PointLightComponent> pointLight = nullptr;
