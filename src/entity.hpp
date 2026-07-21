@@ -27,25 +27,26 @@ namespace engine {
         float lightIntensity = 1.0f;
     };*/
 
-    class GameObject {
+    /*
+    class Entity {
         public:
             using id_t = unsigned int; //similar to typedef
 
-            using Map = std::unordered_map<id_t, GameObject>;
+            using Map = std::unordered_map<id_t, Entity>;
 
-            static GameObject createGameObject() {
+            static Entity createEntity() {
                 static id_t currentId = 0;
-                return GameObject{currentId++};
+                return Entity{currentId++};
             }
 
-            static GameObject makePointLight(
+            static Entity makePointLight(
                 float intensity = 10.f, float radius = 0.1f, glm::vec3 color= glm::vec3(1.f)
             );
 
-            GameObject(const GameObject &) = delete;
-            GameObject &operator=(const GameObject &) = delete;
-            GameObject(GameObject&&) = default;
-            GameObject &operator=(GameObject&&) = default;
+            Entity(const Entity &) = delete;
+            Entity &operator=(const Entity &) = delete;
+            Entity(Entity&&) = default;
+            Entity &operator=(Entity&&) = default;
 
             id_t getId() { return id;}
 
@@ -57,6 +58,9 @@ namespace engine {
 
         private:
             id_t id;
-            GameObject(id_t objId) : id{objId} {}
+            Entity(id_t objId) : id{objId} {}
     };
+    */
+
+    using Entity = uint32_t;
 }

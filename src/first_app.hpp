@@ -2,7 +2,7 @@
 
 #include "engine_window.hpp"
 #include "engine_model.hpp"
-#include "game_object.hpp"
+#include "entity.hpp"
 #include "engine_renderer.hpp"
 #include "engine_descriptors.hpp"
 
@@ -22,13 +22,12 @@ namespace engine {
             FirstApp& operator=(const FirstApp&) = delete;
             void run();
         private:
-            void loadGameObjects();
+            void loadEntities();
 
             Window window {WIDTH, HEIGHT, "Vulkan Engine"};
             Device device {window};
             Renderer renderer {window, device};
 
             std::unique_ptr<DescriptorPool> globalPool{};
-            GameObject::Map gameObjects;
     };
 }

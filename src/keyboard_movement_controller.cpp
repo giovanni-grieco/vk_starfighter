@@ -3,7 +3,7 @@
 
 namespace engine {
 
-    void KeyboardMovementController::moveInPlaneXZ(GLFWwindow* window, float dt, GameObject& gameObject){
+    void KeyboardMovementController::moveInPlaneXZ(GLFWwindow* window, float dt, Entity& entity){
         
         //For rotation
         glm::vec3 rotate{0};
@@ -14,15 +14,15 @@ namespace engine {
         if (glfwGetKey(window, keys.lookDown) == GLFW_PRESS) rotate.x -= 1.f;
 
         if (glm::dot(rotate, rotate) > std::numeric_limits<float>::epsilon()){
-            gameObject.transform.rotation += lookSpeed * dt * glm::normalize(rotate);
+            entity.transform.rotation += lookSpeed * dt * glm::normalize(rotate);
         }
 
-        gameObject.transform.rotation.x = glm::clamp(gameObject.transform.rotation.x, -1.5f, 1.5f);
-        gameObject.transform.rotation.y = glm::mod(gameObject.transform.rotation.y, glm::two_pi<float>());
+        entity.transform.rotation.x = glm::clamp(entity.transform.rotation.x, -1.5f, 1.5f);
+        entity.transform.rotation.y = glm::mod(entity.transform.rotation.y, glm::two_pi<float>());
 
 
         // For translation
-        float yaw = gameObject.transform.rotation.y;
+        float yaw = entity.transform.rotation.y;
         const glm::vec3 forwardDir {sin(yaw), 0.f, cos(yaw)}; // we need this to move the object forward in relation to its orientation
         const glm::vec3 rightDir{forwardDir.z, 0.f, -forwardDir.x}; // same thing applies here, lateral translation is 90° of forward dir.
         const glm::vec3 upDir{0.f, -1.f, 0.f};
@@ -38,7 +38,7 @@ namespace engine {
 
 
         if (glm::dot(moveDir, moveDir) > std::numeric_limits<float>::epsilon()){
-            gameObject.transform.translation += lookSpeed * dt * glm::normalize(moveDir);
+            entity.transform.translation += lookSpeed * dt * glm::normalize(moveDir);
         }
 
 

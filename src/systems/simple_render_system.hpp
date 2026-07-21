@@ -3,7 +3,7 @@
 #include "engine_window.hpp"
 #include "engine_pipeline.hpp"
 #include "engine_model.hpp"
-#include "game_object.hpp"
+#include "entity.hpp"
 #include "engine_renderer.hpp"
 #include "engine_camera.hpp"
 #include "engine_frame_info.hpp"
@@ -21,7 +21,7 @@ namespace engine {
             SimpleRenderSystem(const SimpleRenderSystem&) = delete;
             SimpleRenderSystem& operator=(const SimpleRenderSystem&) = delete;
 
-            void renderGameObjects(FrameInfo &frameInfo);
+            void renderEntities(FrameInfo &frameInfo);
 
         private:
             void createPipelineLayout(VkDescriptorSetLayout globalSetLayout);

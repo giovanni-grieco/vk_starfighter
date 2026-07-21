@@ -58,7 +58,7 @@ namespace engine {
 
    
 
-    void SimpleRenderSystem::renderGameObjects(FrameInfo &frameInfo){
+    void SimpleRenderSystem::renderEntities(FrameInfo &frameInfo){
 
         auto commandBuffer = frameInfo.commandBuffer;
         auto camera = frameInfo.camera;
@@ -76,7 +76,7 @@ namespace engine {
             nullptr
         );
 
-        for (auto& id_obj_pair: frameInfo.gameObjects){
+        for (auto& id_obj_pair: frameInfo.entities){
             auto &obj = id_obj_pair.second;
             if (obj.model == nullptr) continue; // not all gameObjects have models
             SimplePushConstantData push{};

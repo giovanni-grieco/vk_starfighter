@@ -3,7 +3,7 @@
 #include "engine_window.hpp"
 #include "engine_pipeline.hpp"
 #include "engine_model.hpp"
-#include "game_object.hpp"
+#include "entity.hpp"
 #include "engine_renderer.hpp"
 #include "engine_camera.hpp"
 #include "engine_frame_info.hpp"

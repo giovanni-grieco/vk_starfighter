@@ -1,6 +1,6 @@
 #pragma once
 
-#include "game_object.hpp"
+#include "entity.hpp"
 #include "engine_window.hpp"
 
 namespace engine {
@@ -21,7 +21,7 @@ namespace engine {
             };
             
             //Depends strictly on GLFW... needs to be abstracted
-            void moveInPlaneXZ(GLFWwindow* window, float dt, GameObject &gameObject);
+            void moveInPlaneXZ(GLFWwindow* window, float dt, Entity &entity);
 
             KeyMappings keys{};
             float moveSpeed{3.f};

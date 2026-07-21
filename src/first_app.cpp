@@ -22,37 +22,37 @@ namespace engine {
             .setMaxSets(SwapChain::MAX_FRAMES_IN_FLIGHT)
             .addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, SwapChain::MAX_FRAMES_IN_FLIGHT)
             .build();
-        loadGameObjects();
+        loadEntities();
     }
 
     FirstApp::~FirstApp() {}
 
 
-    void FirstApp::loadGameObjects(){
+    void FirstApp::loadEntities(){
         std::shared_ptr<Model> flatVaseModel = Model::createModelFromFile(device, "models/flat_vase.obj");
 
-        auto flatVase = GameObject::createGameObject();
+        auto flatVase = Entity::createEntity();
         flatVase.model = flatVaseModel;
         flatVase.transform.translation = {-0.5f, 0.f, 0.f};
         flatVase.transform.scale = {3.f, 1.5f, 3.f};
-        gameObjects.emplace(flatVase.getId(), std::move(flatVase));
+        entities.emplace(flatVase.getId(), std::move(flatVase));
 
 
         std::shared_ptr<Model> smoothVaseModel = Model::createModelFromFile(device, "models/smooth_vase.obj");
 
-        auto smoothVase = GameObject::createGameObject();
+        auto smoothVase = Entity::createEntity();
         smoothVase.model = smoothVaseModel;
         smoothVase.transform.translation = {0.5f, 0.f, 0.f};
         smoothVase.transform.scale = {3.f, 1.5f, 3.f};
-        gameObjects.emplace(smoothVase.getId(), std::move(smoothVase));
+        entities.emplace(smoothVase.getId(), std::move(smoothVase));
 
         std::shared_ptr <Model> floorModel = Model::createModelFromFile(device, "models/quad.obj");
 
-        auto floor = GameObject::createGameObject();
+        auto floor = Entity::createEntity();
         floor.model = floorModel;
         floor.transform.translation = {0.f, 0.05f, 0.f};
         floor.transform.scale={3.f, 1.f, 3.f};
-        gameObjects.emplace(floor.getId(), std::move(floor));
+        entities.emplace(floor.getId(), std::move(floor));
 
         
         std::vector<glm::vec3> lightColors{
@@ -66,7 +66,7 @@ namespace engine {
 
 
         for (int i = 0; i<lightColors.size(); i++){
-            auto pointLight = GameObject::makePointLight(0.2f);
+            auto pointLight = Entity::makePointLight(0.2f);
             pointLight.color = lightColors[i];
             auto rotateLight = glm::rotate(
                 glm::mat4(1.f),
@@ -74,7 +74,7 @@ namespace engine {
                 {0.f, 1.f, 0.f}
             );
             pointLight.transform.translation = glm::vec3(rotateLight * glm::vec4(1.f, -1.f, -1.f, -1.f));
-            gameObjects.emplace(pointLight.getId(),std::move(pointLight));
+            entities.emplace(pointLight.getId(),std::move(pointLight));
         }
 
     }
@@ -111,7 +111,7 @@ namespace engine {
         
         Camera camera{};
 
-        auto viewerObject = GameObject::createGameObject();
+        auto viewerObject = Entity::createEntity();
         viewerObject.transform.translation.z = -2.5f;
         KeyboardMovementController cameraController{};
 
@@ -140,7 +140,7 @@ namespace engine {
                     commandBuffer,
                     camera,
                     globalDescriptorSets[frameIndex],
-                    gameObjects
+                    entities
                 };
 
                 //update
@@ -156,7 +156,7 @@ namespace engine {
                 //render
                 renderer.beginSwapChainRenderPass(commandBuffer);
                 
-                simpleRenderSystem.renderGameObjects(frameInfo);
+                simpleRenderSystem.renderEntities(frameInfo);
                 pointLightSystem.render(frameInfo);
                 renderer.endSwapChainRenderPass(commandBuffer);
                 renderer.endFrame();

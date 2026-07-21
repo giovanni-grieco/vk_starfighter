@@ -1,4 +1,4 @@
-#include "game_object.hpp"
+#include "entity.hpp"
 
 namespace engine{
     glm::mat4 TransformComponent::mat4() {
@@ -59,8 +59,8 @@ namespace engine{
             };
     }
 
-    GameObject GameObject::makePointLight(float intensity, float radius, glm::vec3 color){
-        GameObject obj = createGameObject();
+    Entity Entity::makePointLight(float intensity, float radius, glm::vec3 color){
+        Entity obj = createEntity();
         obj.color = color;
         obj.transform.scale.x = radius;
         obj.pointLight = std::make_unique<PointLightComponent>(); // can be null

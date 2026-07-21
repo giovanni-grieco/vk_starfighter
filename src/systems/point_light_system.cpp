@@ -70,7 +70,7 @@ namespace engine {
             );
 
         int lightIndex = 0;
-        for (auto& kv: frameInfo.gameObjects){
+        for (auto& kv: frameInfo.entities){
             auto& obj = kv.second;
             
             if(obj.pointLight == nullptr) continue;
@@ -89,8 +89,8 @@ namespace engine {
 
     void PointLightSystem::render(FrameInfo &frameInfo){
 
-        std::map<float, GameObject::id_t> sorted;
-        for (auto& kv : frameInfo.gameObjects){
+        std::map<float, Entity::id_t> sorted;
+        for (auto& kv : frameInfo.entities){
             auto& obj = kv.second;
             if (obj.pointLight == nullptr) continue;
 
@@ -116,7 +116,7 @@ namespace engine {
         );
         
         for (auto it = sorted.rbegin(); it != sorted.rend(); ++it){
-            auto& obj = frameInfo.gameObjects.at(it->second);
+            auto& obj = frameInfo.entities.at(it->second);
             
             
             PointLightPushConstant push{};
