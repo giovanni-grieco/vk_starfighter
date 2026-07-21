@@ -30,6 +30,5 @@ namespace engine
         VkCommandBuffer commandBuffer;
         Camera &camera;
         VkDescriptorSet globalDescriptorSet;
-        Entity::Map &entities;
     };
 }

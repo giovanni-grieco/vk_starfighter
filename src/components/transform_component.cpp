@@ -1,4 +1,4 @@
-#include "entity.hpp"
+#include "transform_component.hpp"
 
 namespace engine{
     glm::mat4 TransformComponent::mat4() {
@@ -57,14 +57,5 @@ namespace engine{
                     invScale.z * (c1 * c2),
                 }
             };
-    }
-
-    Entity Entity::makePointLight(float intensity, float radius, glm::vec3 color){
-        Entity obj = createEntity();
-        obj.color = color;
-        obj.transform.scale.x = radius;
-        obj.pointLight = std::make_unique<PointLightComponent>(); // can be null
-        obj.pointLight->lightIntensity=intensity;
-        return obj;
     }
 }

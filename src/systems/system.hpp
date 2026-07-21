@@ -9,5 +9,6 @@ namespace engine
     public:
         virtual ~ISystem() = default;
         virtual void update(Registry &registry, float dt) = 0;
+        virtual void start(Registry &registry) = 0;
     };
 }

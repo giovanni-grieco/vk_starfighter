@@ -7,13 +7,16 @@
 #include "engine_renderer.hpp"
 #include "engine_camera.hpp"
 #include "engine_frame_info.hpp"
+#include "system.hpp"
+
+#include "components/point_light_component.hpp"
 
 #include <memory>
 #include <vector>
 
 namespace engine {
 
-    class PointLightSystem {
+    class PointLightSystem : ISystem {
         public:
             
             PointLightSystem(Device& device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout);
@@ -21,8 +24,11 @@ namespace engine {
 
             PointLightSystem(const PointLightSystem&) = delete;
             PointLightSystem& operator=(const PointLightSystem&) = delete;
-            void update(FrameInfo& frameInfo, GlobalUbo& ubo);
-            void render(FrameInfo& frameInfo);
+
+            void start(Registry &registry) override;
+            void update(Registry &registry, float dt) override;
+
+            void render(Registry &registry, FrameInfo &frameInfo, GlobalUbo &ubo);
 
         private:
             void createPipelineLayout(VkDescriptorSetLayout globalSetLayout);

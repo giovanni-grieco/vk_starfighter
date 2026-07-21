@@ -1,4 +1,4 @@
-#include "simple_render_system.hpp"
+#include "render_system.hpp"
 
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE // changes the range for 0 to 1
@@ -17,17 +17,17 @@ namespace engine {
         glm::mat4 normalMatrix{1.f};
     };
 
-    SimpleRenderSystem::SimpleRenderSystem(Device &device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout) : device{device} {
+    RenderSystem::RenderSystem(Device &device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout) : device{device} {
         createPipelineLayout(globalSetLayout);
         createPipeline(renderPass);
     }
 
-    SimpleRenderSystem::~SimpleRenderSystem() {
+    RenderSystem::~RenderSystem() {
         vkDestroyPipelineLayout(device.device(), pipelineLayout, nullptr);
 
     }
 
-    void SimpleRenderSystem::createPipelineLayout(VkDescriptorSetLayout globalSetLayout) {
+    void RenderSystem::createPipelineLayout(VkDescriptorSetLayout globalSetLayout) {
         VkPushConstantRange pushConstantRange{};
         pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
         pushConstantRange.offset = 0;
@@ -47,7 +47,7 @@ namespace engine {
         }
     } 
 
-    void SimpleRenderSystem::createPipeline(VkRenderPass renderPass) {
+    void RenderSystem::createPipeline(VkRenderPass renderPass) {
         assert(pipelineLayout != nullptr && "Cannot create pipeline before pipeline layout");
         PipelineConfigInfo pipelineConfig{};
         Pipeline::defaultPipelineConfigInfo(pipelineConfig); //initializes
@@ -58,7 +58,7 @@ namespace engine {
 
    
 
-    void SimpleRenderSystem::renderEntities(FrameInfo &frameInfo){
+    void RenderSystem::renderEntities(Registry &registry, FrameInfo &frameInfo){
 
         auto commandBuffer = frameInfo.commandBuffer;
         auto camera = frameInfo.camera;
@@ -75,13 +75,14 @@ namespace engine {
             0,
             nullptr
         );
+        
 
-        for (auto& id_obj_pair: frameInfo.entities){
-            auto &obj = id_obj_pair.second;
-            if (obj.model == nullptr) continue; // not all gameObjects have models
+        auto& transforms = registry.getComponentArray<TransformComponent>()->getData();
+
+        for (auto& transform : transforms){
             SimplePushConstantData push{};
-            push.modelMatrix = obj.transform.mat4(); //this is executed on the CPU, temporary for now
-            push.normalMatrix = obj.transform.normalMatrix(); // it's a mat3 being converted to mat4
+            push.modelMatrix = transform.mat4();
+            push.normalMatrix = transform.normalMatrix(); // it's a mat3 being converted to mat4
             vkCmdPushConstants(
                 commandBuffer,
                 pipelineLayout,
@@ -90,8 +91,22 @@ namespace engine {
                 sizeof(SimplePushConstantData),
                 &push
             );
-            obj.model->bind(commandBuffer);
-            obj.model->draw(commandBuffer);
+            auto& model = registry.getComponent<Model>(transform.entity);
+            model.bind(commandBuffer);
+            model.draw(commandBuffer);
         }
     }
+
+    void RenderSystem::start(Registry &registry) {
+    }
+
+    void RenderSystem::update(Registry &registry, float dt) {
+
+    }
+
+    void RenderSystem::render(Registry &registry, FrameInfo &frameInfo) {
+        renderEntities(registry, frameInfo);
+    }
+
+
 }

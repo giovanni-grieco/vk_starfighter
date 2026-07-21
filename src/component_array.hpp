@@ -29,6 +29,8 @@ namespace engine
 
         void entityDestroyed(Entity entity) override;
 
+        std::vector<T> &getData() { return m_data; }
+
     private:
         std::vector<T> m_data;              // Packed component data
         std::vector<int> m_entityToData;    // Sparse map: Entity -> Index

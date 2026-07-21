@@ -1,6 +1,6 @@
 #include "first_app.hpp"
 
-#include "systems/simple_render_system.hpp"
+#include "systems/render_system.hpp"
 #include "systems/point_light_system.hpp"
 #include "keyboard_movement_controller.hpp"
 
@@ -106,7 +106,7 @@ namespace engine {
         }
 
 
-        SimpleRenderSystem simpleRenderSystem{device, renderer.getSwapChainRenderPass(), globalSetLayout->getDescriptorSetLayout()};
+        RenderSystem simpleRenderSystem{device, renderer.getSwapChainRenderPass(), globalSetLayout->getDescriptorSetLayout()};
         PointLightSystem pointLightSystem{device, renderer.getSwapChainRenderPass(), globalSetLayout->getDescriptorSetLayout()};
         
         Camera camera{};

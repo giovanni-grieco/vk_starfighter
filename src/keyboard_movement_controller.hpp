@@ -2,6 +2,7 @@
 
 #include "entity.hpp"
 #include "engine_window.hpp"
+#include "registry.hpp"
 
 namespace engine {
     class KeyboardMovementController {
@@ -21,7 +22,7 @@ namespace engine {
             };
             
             //Depends strictly on GLFW... needs to be abstracted
-            void moveInPlaneXZ(GLFWwindow* window, float dt, Entity &entity);
+            void moveInPlaneXZ(GLFWwindow* window, float dt, Entity &entity, Registry &registry);
 
             KeyMappings keys{};
             float moveSpeed{3.f};

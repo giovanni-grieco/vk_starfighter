@@ -61,15 +61,20 @@ namespace engine {
         pipeline = std::make_unique<Pipeline>(device, "shaders/point_light.vert.spv", "shaders/point_light.frag.spv", pipelineConfig);
     }
 
-    void PointLightSystem::update(FrameInfo &frameInfo, GlobalUbo &ubo){
+    void PointLightSystem::start(Registry &registry){
+        // Nothing to do for now
+    }
+
+    void PointLightSystem::update(Registry &registry, float dt){
 
         auto rotateLight = glm::rotate(
                 glm::mat4(1.f),
-                frameInfo.frameTime,
+                dt,
                 {0.f, 1.f, 0.f}
             );
 
         int lightIndex = 0;
+        
         for (auto& kv: frameInfo.entities){
             auto& obj = kv.second;
             
@@ -87,7 +92,7 @@ namespace engine {
         ubo.numLights = lightIndex;
     }
 
-    void PointLightSystem::render(FrameInfo &frameInfo){
+    void PointLightSystem::render(Registry &registry, FrameInfo &frameInfo, GlobalUbo &ubo){
 
         std::map<float, Entity::id_t> sorted;
         for (auto& kv : frameInfo.entities){

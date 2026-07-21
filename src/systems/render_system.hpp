@@ -1,5 +1,6 @@
 #pragma once
 
+#include "system.hpp"
 #include "engine_window.hpp"
 #include "engine_pipeline.hpp"
 #include "engine_model.hpp"
@@ -12,18 +13,22 @@
 #include <vector>
 
 namespace engine {
-    class SimpleRenderSystem {
+    class RenderSystem : ISystem {
         public:
             
-            SimpleRenderSystem(Device& device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout);
-            ~SimpleRenderSystem();
+            RenderSystem(Device& device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout);
+            ~RenderSystem();
 
-            SimpleRenderSystem(const SimpleRenderSystem&) = delete;
-            SimpleRenderSystem& operator=(const SimpleRenderSystem&) = delete;
+            RenderSystem(const RenderSystem&) = delete;
+            RenderSystem& operator=(const RenderSystem&) = delete;
 
-            void renderEntities(FrameInfo &frameInfo);
+            void start(Registry &registry) override;
+            void update(Registry &registry, float dt) override;
 
+            void render(Registry &registry, FrameInfo &frameInfo);
+        
         private:
+            void renderEntities(Registry &registry, FrameInfo &frameInfo);
             void createPipelineLayout(VkDescriptorSetLayout globalSetLayout);
             void createPipeline(VkRenderPass renderPass);
 
